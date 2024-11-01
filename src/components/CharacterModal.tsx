@@ -1,15 +1,7 @@
 // src/components/CharacterModal.tsx
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, Typography } from '@mui/material';
-
-interface Character {
-    name: string;
-    height: string;
-    mass: string;
-    birth_year: string;
-    films: string[];
-    homeworld: string;
-}
+import { Character } from '../types/characterTypes';
 
 interface CharacterModalProps {
     open: boolean;
