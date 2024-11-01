@@ -22,15 +22,19 @@ const UserList: React.FC<UserListProps> = ({ favorites, toggleFavorite }) => {
     const fetchCharacters = async (page: number, query: string = '') => {
         try {
             setLoading(true);
+            setError(null); 
             const url = query
                 ? `https://swapi.dev/api/people/?search=${query}`
                 : `https://swapi.dev/api/people/?page=${page}`;
             const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Failed to fetch characters. Please try again later.');
+            }
             const data = await response.json();
             setCharacters(data.results);
             setNextPage(data.next);
         } catch (err) {
-            setError('Failed to fetch characters.');
+            setError((err as Error).message);
         } finally {
             setLoading(false);
         }
@@ -79,26 +83,41 @@ const UserList: React.FC<UserListProps> = ({ favorites, toggleFavorite }) => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
-            {loading ? (
-                <Typography>Loading...</Typography>
-            ) : error ? (
-                <Typography color="error">{error}</Typography>
-            ) : (
-                <List>
-                    {characters.map((character) => (
-                        <ListItem key={character.url} disablePadding>
-                            <ListItemButton onClick={() => openModal(character)}>
-                                <Typography>{character.name}</Typography>
-                            </ListItemButton>
-                            <Checkbox
-                                checked={favorites.some((fav) => fav.url === character.url)}
-                                onChange={() => toggleFavorite(character)}
-                            />
-                        </ListItem>
-                    ))}
-                </List>
-            )}
-            <Box mt={2} display="flex" justifyContent="space-between">
+            <Box
+                sx={{
+                    minHeight: '700px', 
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: loading ? 'center' : 'flex-start', // Center loading message
+                }}
+            >
+                {error && <Typography color="error">{error}</Typography>}
+                {loading ? (
+                    <Typography align="center">Loading...</Typography>
+                ) : (
+                    <List>
+                        {characters.map((character, index) => (
+                            <ListItem key={character.url} disablePadding>
+                                <ListItemButton onClick={() => openModal(character)}>
+                                    <Box display="flex" alignItems="center">
+                                        <img
+                                            src={`https://picsum.photos/seed/${index}/50/50`}
+                                            alt={character.name}
+                                            style={{ marginRight: '10px', borderRadius: '50%' }}
+                                        />
+                                        <Typography>{character.name}</Typography>
+                                    </Box>
+                                </ListItemButton>
+                                <Checkbox
+                                    checked={favorites.some((fav) => fav.url === character.url)}
+                                    onChange={() => toggleFavorite(character)}
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
+                )}
+            </Box>
+            <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
                 <Button variant="contained" onClick={handlePreviousPage} disabled={currentPage === 1}>
                     Previous
                 </Button>

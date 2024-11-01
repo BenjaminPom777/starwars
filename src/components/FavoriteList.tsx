@@ -1,6 +1,6 @@
 // src/components/FavoriteList.tsx
-import React from 'react';
-import { Box, Typography, List, ListItem } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, List, ListItem, Button } from '@mui/material';
 import { Character } from '../types/characterTypes';
 
 interface FavoriteListProps {
@@ -8,11 +8,27 @@ interface FavoriteListProps {
 }
 
 const FavoriteList: React.FC<FavoriteListProps> = ({ favorites }) => {
+    const [bgColor, setBgColor] = useState<string>('white');
+
+    const changeBackgroundColor = () => {
+        const colors = ['lightblue', 'lightgreen', 'lightcoral', 'lightyellow'];
+        let newColor = bgColor;
+
+        while (newColor === bgColor) {
+            newColor = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        setBgColor(newColor);
+    };
+
     return (
-        <Box width="48%">
+        <Box width="48%" bgcolor={bgColor} p={2} borderRadius="8px">
             <Typography variant="h4" gutterBottom>
                 Favorites
             </Typography>
+            <Button variant="contained" onClick={changeBackgroundColor} style={{ marginBottom: '10px' }}>
+                Change Background Color
+            </Button>
             <List>
                 {favorites.length === 0 ? (
                     <Typography>No favorites yet.</Typography>
