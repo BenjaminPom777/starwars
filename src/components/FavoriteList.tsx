@@ -1,22 +1,28 @@
 // src/components/FavoriteList.tsx
 import React from 'react';
 import { Box, Typography, List, ListItem } from '@mui/material';
+import { Character } from '../types/characterTypes';
 
-const FavoriteList: React.FC = () => {
-    // Placeholder for favorite characters (use state if necessary)
-    const favoriteCharacters: string[] = ['Luke Skywalker', 'Darth Vader'];
+interface FavoriteListProps {
+    favorites: Character[];
+}
 
+const FavoriteList: React.FC<FavoriteListProps> = ({ favorites }) => {
     return (
         <Box width="48%">
             <Typography variant="h4" gutterBottom>
                 Favorites
             </Typography>
             <List>
-                {favoriteCharacters.map((name, index) => (
-                    <ListItem key={index}>
-                        <Typography>{name}</Typography>
-                    </ListItem>
-                ))}
+                {favorites.length === 0 ? (
+                    <Typography>No favorites yet.</Typography>
+                ) : (
+                    favorites.map((character) => (
+                        <ListItem key={character.url}>
+                            <Typography>{character.name}</Typography>
+                        </ListItem>
+                    ))
+                )}
             </List>
         </Box>
     );

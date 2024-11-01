@@ -1,17 +1,20 @@
+// src/components/CharacterModal.tsx
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, Typography } from '@mui/material';
+
+interface Character {
+    name: string;
+    height: string;
+    mass: string;
+    birth_year: string;
+    films: string[];
+    homeworld: string;
+}
 
 interface CharacterModalProps {
     open: boolean;
     onClose: () => void;
-    character: {
-        name: string;
-        height: string;
-        mass: string;
-        birth_year: string;
-        films: string[];
-        homeworld: string;
-    } | null;
+    character: Character | null;
 }
 
 const CharacterModal: React.FC<CharacterModalProps> = ({ open, onClose, character }) => {
